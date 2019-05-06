@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -60,5 +61,6 @@ public class CategoriaResource {
 	public void delete(@PathVariable("codigo") Long codigo) {
 		this.repository.delete(codigo);
 	}
+	
 
 }
