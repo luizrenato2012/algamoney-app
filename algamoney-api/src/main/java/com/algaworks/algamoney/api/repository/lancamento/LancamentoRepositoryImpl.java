@@ -32,9 +32,9 @@ public class LancamentoRepositoryImpl implements LancamentoRepositoryQuery {
 		Root<Lancamento> root = criteria.from(Lancamento.class);
 		
 		//restricoes
-		Predicate []predicates=criaRestricoes(lancamentoFilter, builder, root);
+		Predicate[] predicates=criaRestricoes(lancamentoFilter, builder, root);
 		criteria.where(predicates);
-		TypedQuery<Lancamento> query =manager.createQuery(criteria);
+		TypedQuery<Lancamento> query = manager.createQuery(criteria);
 		
 		adicionaRestricoesPaginacaoNaQuery(query,pageable);
 		
