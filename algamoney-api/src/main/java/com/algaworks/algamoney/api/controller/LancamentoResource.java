@@ -33,7 +33,7 @@ import com.algaworks.algamoney.api.repository.filter.LancamentoFilter;
 import com.algaworks.algamoney.api.service.LancamentoService;
 
 @RestController
-@RequestMapping("/api/lancamento")
+@RequestMapping("/lancamentos")
 public class LancamentoResource {
 	
 	@Autowired

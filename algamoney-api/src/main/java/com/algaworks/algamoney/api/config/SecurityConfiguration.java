@@ -5,6 +5,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 
 @Configuration
 @EnableWebSecurity
@@ -21,12 +22,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http
 			.authorizeRequests()
-			.antMatchers("/api/categoria").permitAll()
+			.antMatchers("/categorias").permitAll()
 			.anyRequest().authenticated()
 			.and()
-			.httpBasic()
-			.and()
-			.csrf().disable();
+		.httpBasic().and()
+		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+		.csrf().disable();
 	}
 	
 	

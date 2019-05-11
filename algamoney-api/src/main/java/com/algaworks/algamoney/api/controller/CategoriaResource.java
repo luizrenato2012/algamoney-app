@@ -7,7 +7,6 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,7 +23,7 @@ import com.algaworks.algamoney.api.model.Categoria;
 import com.algaworks.algamoney.api.repository.CategoriaRepository;
 
 @RestController
-@RequestMapping("/api/categoria")
+@RequestMapping("/categorias")
 public class CategoriaResource {
 	
 	@Autowired
