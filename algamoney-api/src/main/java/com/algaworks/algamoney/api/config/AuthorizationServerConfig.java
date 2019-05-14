@@ -10,6 +10,8 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
 
 @Configuration
@@ -21,24 +23,35 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-		int VALIDADE_TOKEN= 60 * 3 * 10; 
+		int VALIDADE_ACCESS_TOKEN= 20; 
+		int VALIDADE_REFRESH_TOKEN= 60*60*24; 
 		clients.inMemory()
 			.withClient("angular").secret("@angul@r0")
 			.scopes("read","write")
-			.authorizedGrantTypes("password")	// password flow
-			.refreshTokenValiditySeconds(VALIDADE_TOKEN);
+			.authorizedGrantTypes("password","refresh_token")	// password flow e refresh token flow
+			.accessTokenValiditySeconds(VALIDADE_ACCESS_TOKEN)
+			.refreshTokenValiditySeconds(VALIDADE_REFRESH_TOKEN);
 	}
 
 	@Override
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
 		endpoints
-			.tokenStore(getToketStore())
+			.tokenStore(getTokenStore())
+			.accessTokenConverter(this.criaJwtConverter())
+			.reuseRefreshTokens(false)
 			.authenticationManager(this.authenticationManager);
 	}
 
 	@Bean
-	public TokenStore getToketStore() {
-		return new InMemoryTokenStore();
+	public TokenStore getTokenStore() {
+		return new JwtTokenStore(criaJwtConverter());
+	}
+
+	@Bean
+	public JwtAccessTokenConverter criaJwtConverter() {
+		JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+		converter.setSigningKey("mySignner");
+		return converter;
 	}
 	
 }
