@@ -22,18 +22,18 @@ public class CorsFilter implements Filter{
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
-		final String ORIGEM_PERMITIDA="localhost:8000";
+		final String ORIGEM_PERMITIDA="http://localhost:4200"; //alterar para diferentes origens
 		
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpServletResponse res = (HttpServletResponse) response;
 	
-		res.setHeader("Access-Controll-Allow-Origin", ORIGEM_PERMITIDA);
-		res.setHeader("Access-Controll-Allow-Credentials", "true"); 
+		res.setHeader("Access-Control-Allow-Origin", ORIGEM_PERMITIDA);
+		res.setHeader("Access-Control-Allow-Credentials", "true"); 
 		
 		if (req.getMethod().equals("OPTIONS") && ORIGEM_PERMITIDA.equals(req.getHeader("Origin"))) {
-			res.setHeader("Access-Controll-Allow-Methods", "GET, POST, DELETE, PUT, OPTIONS");
-			res.setHeader("Access-Controll-Allow-Headers", "Authorization, Content-Type, Accept");
-			res.setHeader("Access-Controll-Allow-Max-Age", "3600");
+			res.setHeader("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT, OPTIONS");
+			res.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type, Accept");
+			res.setHeader("Access-Control-Allow-Max-Age", "3600");
 			
 			res.setStatus(HttpServletResponse.SC_OK);
 		} else {
