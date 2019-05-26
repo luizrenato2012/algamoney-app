@@ -41,7 +41,7 @@ CREATE TABLE money.usuario_permissao
         REFERENCES money.usuario (codigo) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
-)
+);
 WITH (
     OIDS = FALSE
 )
@@ -50,10 +50,11 @@ TABLESPACE pg_default;
 ALTER TABLE money.usuario_permissao
     OWNER to teste;
 
-
+begin; --commit	rollback
 INSERT INTO money.usuario (codigo, nome, email, senha) values (1, 'Administrador', 'admin@algamoney.com', '$2a$10$X607ZPhQ4EgGNaYKt3n4SONjIv9zc.VMWdEuhCuba7oLAL5IvcL5.');
 INSERT INTO money.usuario (codigo, nome, email, senha) values (2, 'Maria Silva', 'maria@algamoney.com', '$2a$10$Zc3w6HyuPOPXamaMhh.PQOXvDnEsadztbfi6/RyZWJDzimE8WQjaq');
 
+begin; --commit	rollback
 INSERT INTO money.permissao (codigo, descricao) values (1, 'ROLE_CADASTRAR_CATEGORIA');
 INSERT INTO money.permissao (codigo, descricao) values (2, 'ROLE_PESQUISAR_CATEGORIA');
 
@@ -66,16 +67,17 @@ INSERT INTO money.permissao (codigo, descricao) values (7, 'ROLE_REMOVER_LANCAME
 INSERT INTO money.permissao (codigo, descricao) values (8, 'ROLE_PESQUISAR_LANCAMENTO');
 
 -- admin
-INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (1, 1);
-INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (1, 2);
-INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (1, 3);
-INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (1, 4);
-INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (1, 5);
-INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (1, 6);
-INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (1, 7);
-INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (1, 8);
+begin; --commit	rollback
+INSERT INTO money.usuario_permissao (codigo_usuario, codigo_permissao) values (1, 1);
+INSERT INTO money.usuario_permissao (codigo_usuario, codigo_permissao) values (1, 2);
+INSERT INTO money.usuario_permissao (codigo_usuario, codigo_permissao) values (1, 3);
+INSERT INTO money.usuario_permissao (codigo_usuario, codigo_permissao) values (1, 4);
+INSERT INTO money.usuario_permissao (codigo_usuario, codigo_permissao) values (1, 5);
+INSERT INTO money.usuario_permissao (codigo_usuario, codigo_permissao) values (1, 6);
+INSERT INTO money.usuario_permissao (codigo_usuario, codigo_permissao) values (1, 7);
+INSERT INTO money.usuario_permissao (codigo_usuario, codigo_permissao) values (1, 8);
 
 -- maria
-INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (2, 2);
-INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (2, 5);
-INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (2, 8);
+INSERT INTO money.usuario_permissao (codigo_usuario, codigo_permissao) values (2, 2);
+INSERT INTO money.usuario_permissao (codigo_usuario, codigo_permissao) values (2, 5);
+INSERT INTO money.usuario_permissao (codigo_usuario, codigo_permissao) values (2, 8);

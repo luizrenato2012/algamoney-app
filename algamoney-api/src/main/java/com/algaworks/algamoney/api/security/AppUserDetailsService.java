@@ -1,8 +1,10 @@
 package com.algaworks.algamoney.api.security;
 
-import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -26,12 +28,12 @@ public class AppUserDetailsService implements UserDetailsService{
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		Optional<Usuario> optionalUsuario = usuarioReposity.findByEmail(email);
-		Usuario usuario = optionalUsuario.orElseThrow( () -> new RuntimeException("usuario"));
+		Usuario usuario = optionalUsuario.orElseThrow( () -> new UsernameNotFoundException("Usuario e/ou senha incorretos!"));
 		return new User(usuario.getEmail(), usuario.getSenha(), this.getPermissoes(usuario.getPermissoes()));
 	}
 
-	private List<SimpleGrantedAuthority> getPermissoes(List<Permissao> permissoes) {
-		List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+	private Collection<? extends GrantedAuthority> getPermissoes(List<Permissao> permissoes) {
+		Set<SimpleGrantedAuthority> authorities = new HashSet<>();
 		permissoes.forEach(p -> authorities.add(new SimpleGrantedAuthority(p.getDescricao())));
 		return authorities;
 	}
