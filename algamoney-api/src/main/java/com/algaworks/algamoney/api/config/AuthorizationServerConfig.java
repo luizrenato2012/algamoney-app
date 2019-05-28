@@ -22,14 +22,21 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-		int VALIDADE_ACCESS_TOKEN= 20; 
+		int VALIDADE_ACCESS_TOKEN= 60 * 5; 
 		int VALIDADE_REFRESH_TOKEN= 60*60*24; 
 		clients.inMemory()
 			.withClient("angular").secret("@angul@r0")
-			.scopes("read","write")
+				.scopes("read","write")
+				.authorizedGrantTypes("password","refresh_token")	// password flow e refresh token flow
+				.accessTokenValiditySeconds(VALIDADE_ACCESS_TOKEN)
+				.refreshTokenValiditySeconds(VALIDADE_REFRESH_TOKEN)
+				.and()
+			.withClient("mobile").secret("m0b1l4")
+			.scopes("read")
 			.authorizedGrantTypes("password","refresh_token")	// password flow e refresh token flow
 			.accessTokenValiditySeconds(VALIDADE_ACCESS_TOKEN)
 			.refreshTokenValiditySeconds(VALIDADE_REFRESH_TOKEN);
+			
 	}
 
 	@Override
