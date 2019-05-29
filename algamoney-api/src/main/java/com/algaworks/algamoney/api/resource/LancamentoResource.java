@@ -31,6 +31,7 @@ import com.algaworks.algamoney.api.exceptionhandler.AlgamoneyExceptionHandler.Er
 import com.algaworks.algamoney.api.model.Lancamento;
 import com.algaworks.algamoney.api.repository.LancamentoRepository;
 import com.algaworks.algamoney.api.repository.filter.LancamentoFilter;
+import com.algaworks.algamoney.api.repository.projections.ResumoLancamento;
 import com.algaworks.algamoney.api.service.LancamentoService;
 
 @RestController
@@ -58,6 +59,12 @@ public class LancamentoResource {
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
 	public Page<Lancamento> pesquisar(LancamentoFilter lancamentoFilter, Pageable pageable) { 
 		return this.lancamentoRepository.filtrar(lancamentoFilter, pageable);
+	}
+	
+	@GetMapping(params="resumo")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
+	public Page<ResumoLancamento> resumir(LancamentoFilter lancamentoFilter, Pageable pageable) { 
+		return this.lancamentoRepository.resumir(lancamentoFilter, pageable);
 	}
 	
 	@GetMapping("/{codigo}")
