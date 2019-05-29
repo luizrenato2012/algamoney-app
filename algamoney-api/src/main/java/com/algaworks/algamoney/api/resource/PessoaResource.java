@@ -1,4 +1,4 @@
-package com.algaworks.algamoney.api.controller;
+package com.algaworks.algamoney.api.resource;
 
 import java.util.List;
 
@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,6 +45,7 @@ public class PessoaResource {
 	}
 	
 	@GetMapping("/{codigo}")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_PESSOA') and $oauth2.hasScope('read')")
 	public ResponseEntity<?> busca(@PathVariable("codigo") Long codigo) {
 		Pessoa pessoa = this.pessoaRepository.findOne(codigo);
 		return pessoa!=null ? 
@@ -52,6 +54,7 @@ public class PessoaResource {
 	}
 	
 	@PostMapping
+	@PreAuthorize("hasAuthoriry('ROLE_CADASTRAR_PESSOA') and #oauth2.hasScope('write')")
 	public ResponseEntity<Pessoa> cria( @Valid @RequestBody Pessoa pessoa, HttpServletResponse response) {
 		Pessoa pessoaSalva = this.pessoaRepository.save(pessoa);
 		
@@ -61,12 +64,14 @@ public class PessoaResource {
 	}
 	
 	@DeleteMapping("/{codigo}")
+	@PreAuthorize("hasAuthority('ROLE_REMOVER_PESSOA') and #oauth2.hasScoe('write')")
 	public ResponseEntity<?> delete (@PathVariable("codigo") Long codigo) {
 		this.pessoaService.delete(codigo);
 		return ResponseEntity.noContent().build();
 	}
 	
 	@PutMapping("/{codigo}")
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_PESSOA') and #oauth2.hasScope('write')")
 	public ResponseEntity<?> atualiza(@PathVariable("codigo") Long codigo, 
 			@RequestBody @Valid Pessoa pessoa) {
 		Pessoa pessoaAlterada = this.pessoaService.update(codigo, pessoa);
@@ -75,6 +80,7 @@ public class PessoaResource {
 	
 	@PutMapping("/{codigo}/ativo")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_PESSOA') and #oauth2.hasScope('write')")
 	public ResponseEntity<?> atualizaPropriedadeAtivo(@PathVariable ("codigo") Long codigo, @RequestBody Boolean ativo) {
 		Pessoa pessoa = pessoaService.atualizaPropriedadeAtivo(codigo,ativo);
 		return ResponseEntity.ok(pessoa);

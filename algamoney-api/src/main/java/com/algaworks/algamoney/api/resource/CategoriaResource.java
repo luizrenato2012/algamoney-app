@@ -1,4 +1,4 @@
-package com.algaworks.algamoney.api.controller;
+package com.algaworks.algamoney.api.resource;
 
 import java.util.List;
 
