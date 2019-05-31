@@ -52,7 +52,7 @@ public class CategoriaResource {
 	
 	
 	@GetMapping("/{codigo}")
-	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA') and #oauth.hasScope('read')")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA') and #oauth2.hasScope('read')")
 	public ResponseEntity<Categoria> busca(@PathVariable Long codigo) {
 		Categoria categoria = this.repository.findOne(codigo);
 		return categoria!=null  ?
