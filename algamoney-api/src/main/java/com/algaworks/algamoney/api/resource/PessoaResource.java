@@ -7,6 +7,8 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.algaworks.algamoney.api.event.RecursoCriadoEvento;
 import com.algaworks.algamoney.api.model.Pessoa;
 import com.algaworks.algamoney.api.repository.PessoaRepository;
+import com.algaworks.algamoney.api.repository.filter.PessoaFilter;
 import com.algaworks.algamoney.api.service.PessoaService;
 
 @RestController
@@ -40,12 +43,13 @@ public class PessoaResource {
 	
 	
 	@GetMapping
-	public List<Pessoa> listaTodas() {
-		return this.pessoaRepository.findAll();
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_PESSOA') and #oauth2.hasScope('read')")
+	public Page<Pessoa> pesquisar(PessoaFilter filter, Pageable pageable) {
+		return pessoaRepository.filtrar(filter, pageable);
 	}
 	
 	@GetMapping("/{codigo}")
-	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_PESSOA') and $oauth2.hasScope('read')")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_PESSOA') and #oauth2.hasScope('read')")
 	public ResponseEntity<?> busca(@PathVariable("codigo") Long codigo) {
 		Pessoa pessoa = this.pessoaRepository.findOne(codigo);
 		return pessoa!=null ? 
