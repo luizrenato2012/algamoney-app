@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -42,7 +43,7 @@ public class LancamentoResource {
 	private LancamentoRepository lancamentoRepository;
 	
 	@Autowired
-	private LancamentoService service;
+	private LancamentoService lancamentoService;
 	
 	@Autowired
 	private ApplicationEventPublisher publisher;
@@ -80,7 +81,7 @@ public class LancamentoResource {
 	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_LANCAMENTO') and #oauth2.hasScope('write')")
 	public ResponseEntity<Lancamento> cria(@Valid @RequestBody Lancamento lancamento, 
 			HttpServletResponse response) {
-		Lancamento lancamentoSalvo = this.service.save(lancamento);
+		Lancamento lancamentoSalvo = this.lancamentoService.save(lancamento);
 		publisher.publishEvent(new RecursoCriadoEvento(this, lancamentoSalvo.getCodigo(), response));
 		return ResponseEntity.status(HttpStatus.CREATED).body(lancamento);
 	}
@@ -99,6 +100,17 @@ public class LancamentoResource {
 	@PreAuthorize("hasAuthority('ROLE_REMOVER_LANCAMENTO') and #oauth2.hasScope('write')")
 	public void exclui(@PathVariable("codigo") Long codigo) {
 		this.lancamentoRepository.delete(codigo);
+	}
+	
+	@PutMapping("/{codigo}")
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_LANCAMENTO') and #oauth2.hasScope('write')")
+	public ResponseEntity<Lancamento> atualizar(@PathVariable Long codigo, @Valid @RequestBody Lancamento lancamento) {
+		try {
+			Lancamento lancamentoNovo = this.lancamentoService.update(codigo, lancamento);
+			return ResponseEntity.accepted().body(lancamentoNovo);
+		} catch (IllegalArgumentException e ) {
+			return ResponseEntity.notFound().build();
+		}
 	}
 
 }

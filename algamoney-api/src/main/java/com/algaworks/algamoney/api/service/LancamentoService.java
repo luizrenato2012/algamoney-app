@@ -1,5 +1,6 @@
 package com.algaworks.algamoney.api.service;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,35 @@ public class LancamentoService {
 		}
 		
 		return this.lancamentoRepository.save(lancamento);
+	}
+
+	public Lancamento update(Long codigo, Lancamento lancamento) {
+		Lancamento lancamentoOriginal = buscaLancamentoExistente(codigo);
+		if (lancamentoOriginal==null) {
+			throw new IllegalArgumentException("Lancamento codigo "+ codigo + " nao encontrado!");
+		}
+		
+		if(!lancamento.getPessoa().equals(lancamentoOriginal.getPessoa())) {
+			validarPessoa(lancamento);
+		}
+		BeanUtils.copyProperties(lancamento, lancamentoOriginal, "codigo");
+		lancamentoRepository.save(lancamentoOriginal);
+		return lancamento;
+	}
+
+	private void validarPessoa(Lancamento lancamento) {
+		Pessoa pessoa = null;
+		if (lancamento.getPessoa().getCodigo()!=null) {
+			pessoa=	this.pessoaRepository.findOne(lancamento.getPessoa().getCodigo());
+		}
+		
+		if (pessoa==null || pessoa.isInativa()) {
+			throw new PessoaInexistenteOuInativaException ();
+		}
+	}
+
+	private Lancamento buscaLancamentoExistente(Long codigo) {
+		return this.lancamentoRepository.findOne(codigo);
 	}
 
 }
